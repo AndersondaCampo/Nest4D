@@ -79,10 +79,13 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="..\src\Nest4D.pas"/>
-        <DCCReference Include="..\src\Nest4D.route.pas"/>
         <DCCReference Include="..\src\Nest4D.methods.pas"/>
-        <DCCReference Include="..\src\DI\Nest4D.DI.service.pas"/>
-        <DCCReference Include="..\src\DI\Nest4D.DI.module.pas"/>
+        <DCCReference Include="..\src\Nest4D.Types.pas"/>
+        <DCCReference Include="..\src\Nest4D.Attrs.pas"/>
+        <DCCReference Include="App\App.Module.pas"/>
+        <DCCReference Include="App\App.Service.pas"/>
+        <DCCReference Include="DB\DB.Service.pas"/>
+        <DCCReference Include="App\App.Controller.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

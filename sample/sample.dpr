@@ -6,83 +6,27 @@ program sample;
 uses
   System.SysUtils,
   System.JSON,
+  Horse,
   Nest4D in '..\src\Nest4D.pas',
-  Nest4D.route in '..\src\Nest4D.route.pas',
   Nest4D.methods in '..\src\Nest4D.methods.pas',
-  Nest4D.DI.service in '..\src\DI\Nest4D.DI.service.pas',
-  Nest4D.DI.module in '..\src\DI\Nest4D.DI.module.pas';
-
-type
-
-  [Route('test')]
-  TTestController = class
-  private
-  public
-    [GET(':id')] { /test/10 }
-    procedure getId([Param] id: Integer; [Response] res: TRes);
-
-    [GET] { /test?name=Jhon }
-    function getName([Query] name: String): String;
-
-    [GET('arr')] { /test/arr }
-    function getJsonArr: TJSONArray;
-
-    [GET('number')] { /test/number }
-    function getNumber: Integer;
-
-    { TODO : Future inject dependencies }
-    constructor Create({ [Inject] myDep: IMyDep });
-    destructor Destroy(); override;
-  end;
-
-  { TTestController }
-
-constructor TTestController.Create;
-begin
-
-end;
-
-destructor TTestController.Destroy;
-begin
-  inherited;
-end;
-
-function TTestController.getName(name: String): String;
-begin
-  Result := '{"name": "' + name + '"}';
-end;
-
-procedure TTestController.getId([TParam] id: Integer; res: TRes);
-begin
-  res.Send('Your ID is ' + id.ToString);
-end;
-
-function TTestController.getJsonArr: TJSONArray;
-var
-  I: Integer;
-begin
-  Result := TJSONArray.Create;
-  for I  := 0 to 999 do
-  begin
-    Result.AddElement(TJSONObject.Create(TJSONPair.Create('id', TJSONNumber.Create(I))));
-  end;
-end;
-
-function TTestController.getNumber: Integer;
-begin
-  Result := 10;
-end;
+  Nest4D.Types in '..\src\Nest4D.Types.pas',
+  Nest4D.Attrs in '..\src\Nest4D.Attrs.pas',
+  App.Module in 'App\App.Module.pas',
+  App.Service in 'App\App.Service.pas',
+  DB.Service in 'DB\DB.Service.pas',
+  App.Controller in 'App\App.Controller.pas';
 
 begin
-  ReportMemoryLeaksOnShutdown := True;
-
   try
-    TNest4D.RegisterController(TTestController);
-    TNest4D.Bootstrap;
-    TNest4D.Start(3030,
-        procedure
+    Bootstrap(TAppModule);
+    THorse.Port := 3030;
+    THorse.Listen(
+      procedure
       begin
-        writeln('Server started');
+        writeln('Server running');
+        writeln('Press any key to stop...');
+        Readln;
+        THorse.StopListen;
       end);
   except
     on E: Exception do
